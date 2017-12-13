@@ -12,12 +12,21 @@ const Card = (props) => {
         <p className="card-footer-item">
           <span>Ver no <a href={ props.repo.html_url }>Github</a></span>
         </p>
-        <p className="card-footer-item">
-          <span><a onClick={ props.handlerFavorites.bind(this, props.repo) }>{ props.buttonLabel }</a></span>
-        </p>
+        {
+          (props.handlerFavorites) ?
+            <p className="card-footer-item">
+              <span><a onClick={ props.handlerFavorites.bind(this, props.repo) }>{ props.buttonLabel }</a></span>
+            </p> :
+            ''
+        }
       </footer>
     </div>
   );
+}
+
+Card.defaultProps = {
+  buttonLabel: "-",
+  handlerFavorites: null
 }
 
 export default Card;

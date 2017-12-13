@@ -59,9 +59,8 @@ class Favorites extends Component {
               <Card
                 key={ repo.id }
                 repo={ repo }
-                handlerFavorites={ () => {} }
-                buttonLabel="Desfavoritar" />
-              )
+              />
+            )
           })
         }
       </section>

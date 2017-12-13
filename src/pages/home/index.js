@@ -1,56 +1,67 @@
 import React, { Component } from 'react';
+import InfiniteScroll from 'react-infinite-scroller';
+import update from 'immutability-helper';
 
+// api services
 import github from '../../api/github';
 import firebase from '../../api/firebase';
 
+// components
 import Card from '../../components/card';
 import Tabs from '../../components/tabs';
 import Tab from '../../components/tabs/tab';
 
 class Home extends Component {
-  state = { initialSelect: 0, ruby_repositories: [], javascript_repositories: [] };
+  state = {
+    tabs: [
+      { id: 0, label: 'Ruby', language: 'ruby', repository: 'ruby_repositories', pageStart: 0 },
+      { id: 1, label: 'Javascript', language: 'javascript', repository: 'javascript_repositories', pageStart: 0 }
+    ],
+    ruby_repositories: [],
+    javascript_repositories: []
+  }
 
-  loadRepositories = () => {
-    let url_rb = 'https://api.github.com/search/repositories?q=language:ruby&page=1&per_page=100';
-    let url_js = 'https://api.github.com/search/repositories?q=language:javascript&page=1&per_page=100';
+  // update the state:
+  // increments the pageStart of the correct tab in state
+  // push new repositories in state
+  _updateState = (repository, data, tabIndex) => {
+    let newDataRepository = update(this.state[repository], {$push: data});
+
+    let tabs = [...this.state.tabs];
+    tabs[tabIndex].pageStart += 1;
+
+    this.setState({ [repository]: newDataRepository, tabs });
+  }
+
+  // load the repositories (GITHUB API) and caches the results
+  // called by InfiniteScroll and uses GITHUB API pagination
+  loadRepositories = (tabIndex, language, repository, page) => {
+    let url = `https://api.github.com/search/repositories?q=language:${language}&page=${page}&per_page=5`;
 
     if('caches' in window) {
       caches.open('github-cache').then(cache => {
-        caches.match(url_rb)
+        caches.match(url)
           .then(response => {
             return response.json();
           })
           .then(data => {
-            this.setState({ ruby_repositories: data.items })
+            this._updateState(repository, data.items, tabIndex);
           })
           .catch(error => {
-            github.get(`search/repositories?q=language:ruby&page=1&per_page=100`)
+            github.get(`search/repositories?q=language:${language}&page=${page}&per_page=5`)
               .then(res => {
-                cache.add(url_rb);
-                this.setState({ ruby_repositories: res.data.items })
-              });
-          });
+                cache.add(url);
 
-        caches.match(url_js)
-          .then(response => {
-            return response.json();
-          })
-          .then(data => {
-            this.setState({ javascript_repositories: data.items })
-          })
-          .catch(error => {
-            github.get(`search/repositories?q=language:javascript&page=1&per_page=100`)
-              .then(res => {
-                cache.add(url_js);
-                this.setState({ javascript_repositories: res.data.items })
+                this._updateState(repository, res.data.items, tabIndex);
               });
           });
       });
     } else {
       console.log('Cache Not Suported!');
     }
-  };
+  }
 
+  // send repository data to store in Firebase
   addToFavorites = (repo, event) => {
     event.preventDefault();
 
@@ -63,10 +74,6 @@ class Home extends Component {
       });
   };
 
-  componentWillMount() {
-    this.loadRepositories();
-  }
-
   render() {
     return (
       <section className="section">
@@ -74,29 +81,29 @@ class Home extends Component {
           <h1>Listagem</h1>
         </div>
 
-        <Tabs selected={ this.state.initialSelect }>
-          <Tab key={ 0 } label="Ruby">
-            { this.state.ruby_repositories.map(repo =>
-                <Card
-                  key={ repo.id }
-                  repo={ repo }
-                  handlerFavorites={ this.addToFavorites.bind(this) }
-                  buttonLabel="Favoritar" />
-              )
-            }
-          </Tab>
-
-          <Tab key={ 1 } label="Javascript">
-            {
-              this.state.javascript_repositories.map(repo =>
-                <Card
-                  key={ repo.id }
-                  repo={ repo }
-                  handlerFavorites={ this.addToFavorites.bind(this) }
-                  buttonLabel="Favoritar" />
-              )
-            }
-          </Tab>
+        <Tabs selected={ 0 }>
+          {
+            this.state.tabs.map((tab, index) => (
+              <Tab key={tab.id} label={tab.label}>
+                <InfiniteScroll
+                    pageStart={tab.pageStart}
+                    loadMore={this.loadRepositories.bind(this, index, tab.language, tab.repository)}
+                    hasMore={true || false}
+                    threshold={150}
+                    loader={<div className="is-loading has-text-centered">Loading ...</div>}
+                >
+                  { this.state[tab.repository].map(repo =>
+                      <Card
+                        key={ repo.id }
+                        repo={ repo }
+                        handlerFavorites={ this.addToFavorites.bind(this) }
+                        buttonLabel="Favoritar" />
+                    )
+                  }
+                </InfiniteScroll>
+              </Tab>
+            ))
+          }
         </Tabs>
       </section>
     );

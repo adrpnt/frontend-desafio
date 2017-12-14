@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 class Tabs extends Component {
-  state = { selected: this.props.selected };
+  state = { selected: this.props.selected }
 
   renderTitles = () => {
     const labels = (child, idx) => {
-      let activeClass = (this.state.selected === idx ? 'is-active' : '');
+      let activeClass = (this.state.selected === idx ? 'is-active' : '')
 
       return (
         <li className={ activeClass } role="tab" key={ idx } aria-controls={ `panel${idx}` }>
@@ -13,19 +13,19 @@ class Tabs extends Component {
             { child.props.label }
           </a>
         </li>
-      );
+      )
     }
 
     return (
       <ul role="tablist">
         { this.props.children.map(labels.bind(this)) }
       </ul>
-    );
+    )
   }
 
   onClick = (index, event) => {
     event.preventDefault();
-    this.setState({ selected: index });
+    this.setState({ selected: index })
   }
 
   render() {
@@ -37,8 +37,8 @@ class Tabs extends Component {
 
         { this.props.children[this.state.selected] }
       </div>
-    );
+    )
   }
 }
 
-export default Tabs;
+export default Tabs

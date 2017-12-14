@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import InfiniteScroll from 'react-infinite-scroller';
-import update from 'immutability-helper';
+import React, { Component } from 'react'
+import InfiniteScroll from 'react-infinite-scroller'
+import update from 'immutability-helper'
 
 // api services
-import github from '../../api/github';
-import firebase from '../../api/firebase';
+import github from '../../api/github'
+import firebase from '../../api/firebase'
 
 // components
-import Card from '../../components/card';
-import Tabs from '../../components/tabs';
-import Tab from '../../components/tabs/tab';
+import Card from '../../components/card'
+import Tabs from '../../components/tabs'
+import Tab from '../../components/tabs/tab'
 
 class Home extends Component {
   state = {
@@ -36,43 +36,43 @@ class Home extends Component {
   // load the repositories (GITHUB API) and caches the results
   // called by InfiniteScroll and uses GITHUB API pagination
   loadRepositories = (tabIndex, language, repository, page) => {
-    let url = `https://api.github.com/search/repositories?q=language:${language}&page=${page}&per_page=5`;
+    let url = `https://api.github.com/search/repositories?q=language:${language}&page=${page}&per_page=5`
 
     if('caches' in window) {
       caches.open('github-cache').then(cache => {
         caches.match(url)
           .then(response => {
-            return response.json();
+            return response.json()
           })
           .then(data => {
-            this._updateState(repository, data.items, tabIndex);
+            this._updateState(repository, data.items, tabIndex)
           })
           .catch(error => {
             github.get(`search/repositories?q=language:${language}&page=${page}&per_page=5`)
               .then(res => {
-                cache.add(url);
+                cache.add(url)
 
-                this._updateState(repository, res.data.items, tabIndex);
+                this._updateState(repository, res.data.items, tabIndex)
               });
           });
       });
     } else {
-      console.log('Cache Not Suported!');
+      console.log('Cache Not Suported!')
     }
   }
 
   // send repository data to store in Firebase
   addToFavorites = (repo, event) => {
-    event.preventDefault();
+    event.preventDefault()
 
     firebase.post('favorites.json', repo)
       .then(response => {
         if('caches' in window) {
-          caches.delete('firebase-cache');
-          alert('Repositório adicionado aos favoritos.');
+          caches.delete('firebase-cache')
+          alert('Repositório adicionado aos favoritos.')
         }
-      });
-  };
+      })
+  }
 
   render() {
     return (
@@ -92,7 +92,8 @@ class Home extends Component {
                     threshold={150}
                     loader={<div className="is-loading has-text-centered">Loading ...</div>}
                 >
-                  { this.state[tab.repository].map(repo =>
+                  {
+                    this.state[tab.repository].map(repo =>
                       <Card
                         key={ repo.id }
                         repo={ repo }
@@ -106,7 +107,7 @@ class Home extends Component {
           }
         </Tabs>
       </section>
-    );
+    )
   }
 }
 

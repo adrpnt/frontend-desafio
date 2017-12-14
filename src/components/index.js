@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import Toolbar from './toolbar';
+import React, { Component } from 'react'
+import Toolbar from './toolbar'
 
-import 'bulma/css/bulma.css';
+import 'bulma/css/bulma.css'
 
-import Routes from '../routes';
+import Routes from '../routes'
 
 class App extends Component {
   render() {
@@ -12,8 +12,8 @@ class App extends Component {
         <Toolbar />
         <Routes />
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App

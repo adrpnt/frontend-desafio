@@ -1,8 +1,8 @@
-import React from 'react';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import React from 'react'
+import { Route, Redirect, Switch } from 'react-router-dom'
 
-import Home from '../pages/home';
-import Favorites from '../pages/favorites';
+import Home from '../pages/home'
+import Favorites from '../pages/favorites'
 
 export default props => (
   <Switch>

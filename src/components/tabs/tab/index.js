@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 
 const Tab = (props) => {
-  return <div>{props.children}</div>;
+  return <div>{props.children}</div>
 }
 
-export default Tab;
+export default Tab

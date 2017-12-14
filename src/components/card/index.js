@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const Card = (props) => {
   return (
@@ -21,7 +21,7 @@ const Card = (props) => {
         }
       </footer>
     </div>
-  );
+  )
 }
 
 Card.defaultProps = {
@@ -29,4 +29,4 @@ Card.defaultProps = {
   handlerFavorites: null
 }
 
-export default Card;
+export default Card

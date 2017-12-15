@@ -18,7 +18,8 @@ class Home extends Component {
       { id: 1, label: 'Javascript', language: 'javascript', repository: 'javascript_repositories', pageStart: 0 }
     ],
     ruby_repositories: [],
-    javascript_repositories: []
+    javascript_repositories: [],
+    favorite_repositories: []
   }
 
   // update the state:
@@ -69,9 +70,21 @@ class Home extends Component {
       .then(response => {
         if('caches' in window) {
           caches.delete('firebase-cache')
-          alert('Repositório adicionado aos favoritos.')
         }
+
+        let favorite_repositories = [...this.state.favorite_repositories]
+        favorite_repositories.push(repo.id)
+
+        localStorage.setItem('favorites', JSON.stringify(favorite_repositories))
+        this.setState({ favorite_repositories })
+
+        alert('Repositório adicionado aos favoritos.')
       })
+  }
+
+  componentWillMount() {
+    let favorites = JSON.parse(localStorage.getItem('favorites'))
+    this.setState({ favorite_repositories: favorites })
   }
 
   render() {
@@ -93,13 +106,25 @@ class Home extends Component {
                     loader={<div className="is-loading has-text-centered">Loading ...</div>}
                 >
                   {
-                    this.state[tab.repository].map(repo =>
-                      <Card
-                        key={ repo.id }
-                        repo={ repo }
-                        handlerFavorites={ this.addToFavorites.bind(this) }
-                        buttonLabel="Favoritar" />
-                    )
+                    this.state[tab.repository].map(repo => {
+                      let is_favorited = this.state.favorite_repositories.find(favorite => favorite === repo.id)
+
+                      if (is_favorited) {
+                        return (
+                          <Card
+                            key={ repo.id }
+                            repo={ repo } />
+                        )
+                      }
+
+                      return (
+                          <Card
+                            key={ repo.id }
+                            repo={ repo }
+                            handlerFavorites={ this.addToFavorites.bind(this) }
+                            buttonLabel="Favoritar" />
+                      )
+                    })
                   }
                 </InfiniteScroll>
               </Tab>

@@ -17,7 +17,9 @@ const Card = (props) => {
             <p className="card-footer-item">
               <span><a onClick={ props.handlerFavorites.bind(this, props.repo) }>{ props.buttonLabel }</a></span>
             </p> :
-            ''
+            <p className="card-footer-item">
+              <span>{ props.buttonLabel }</span>
+            </p>
         }
       </footer>
     </div>

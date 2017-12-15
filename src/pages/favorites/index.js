@@ -45,11 +45,13 @@ class Favorites extends Component {
         </div>
 
         {
-          Object.keys(this.state.favorite_repositories).map((key, index) => {
-            const repo = { ...this.state.favorite_repositories[key] }
+          (this.state.favorite_repositories) ?
+            Object.keys(this.state.favorite_repositories).map((key, index) => {
+              const repo = { ...this.state.favorite_repositories[key] }
 
-            return <Card key={ repo.id } repo={ repo } />
-          })
+              return <Card key={ repo.id } repo={ repo } />
+            }) :
+            <p>Nenhum repositório favoritado.</p>
         }
       </section>
     )

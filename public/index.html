@@ -47,7 +47,7 @@
           min-height: 3.25rem;
         }
         .navbar-menu{
-          /*background-color: #363636 !important;*/
+          background-color: #363636 !important;
           display: flex !important;
           align-items: stretch;
           flex-grow: 1;
@@ -59,12 +59,16 @@
         .navbar-end{
           justify-content: flex-end;
           margin-left: auto;
+          margin-right: 5px;
           align-items: stretch;
           display: flex;
         }
-        /*.navbar-item {
+        .navbar-item {
           color: whitesmoke !important;
-        }*/
+        }
+        a.navbar-item:hover, a.navbar-item.is-active, a.navbar-link:hover, a.navbar-link.is-active {
+          color: #000 !important;
+        }
       }
     </style>
   </head>

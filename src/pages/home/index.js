@@ -19,19 +19,19 @@ class Home extends Component {
     ],
     ruby_repositories: [],
     javascript_repositories: [],
-    favorite_repositories: []
+    favorite_ids: []
   }
 
   // update the state:
   // increments the pageStart of the correct tab in state
   // push new repositories in state
   _updateState = (repository, data, tabIndex) => {
-    let newDataRepository = update(this.state[repository], {$push: data});
+    let newDataRepository = update(this.state[repository], {$push: data})
 
-    let tabs = [...this.state.tabs];
-    tabs[tabIndex].pageStart += 1;
+    let tabs = [...this.state.tabs]
+    tabs[tabIndex].pageStart += 1
 
-    this.setState({ [repository]: newDataRepository, tabs });
+    this.setState({ [repository]: newDataRepository, tabs })
   }
 
   // load the repositories (GITHUB API) and caches the results
@@ -72,19 +72,23 @@ class Home extends Component {
           caches.delete('firebase-cache')
         }
 
-        let favorite_repositories = [...this.state.favorite_repositories]
-        favorite_repositories.push(repo.id)
+        let favorites = [...this.state.favorite_ids]
+        favorites.push(repo.id)
 
-        localStorage.setItem('favorites', JSON.stringify(favorite_repositories))
-        this.setState({ favorite_repositories })
+        localStorage.setItem('favorites', JSON.stringify(favorites))
+        this.setState({ favorite_ids: favorites })
 
         alert('Repositório adicionado aos favoritos.')
       })
   }
 
   componentWillMount() {
-    let favorites = JSON.parse(localStorage.getItem('favorites'))
-    this.setState({ favorite_repositories: favorites })
+    const favorites = localStorage.getItem('favorites')
+
+    if (favorites) {
+      this.setState({ favorite_ids: JSON.parse(favorites) })
+      return
+    }
   }
 
   render() {
@@ -107,14 +111,16 @@ class Home extends Component {
                 >
                   {
                     this.state[tab.repository].map(repo => {
-                      let is_favorited = this.state.favorite_repositories.find(favorite => favorite === repo.id)
+                      if (this.state.favorite_ids) {
+                        let is_favorited = this.state.favorite_ids.find(favorite => favorite === repo.id);
 
-                      if (is_favorited) {
-                        return (
-                          <Card
-                            key={ repo.id }
-                            repo={ repo } />
-                        )
+                        if (is_favorited) {
+                          return (
+                            <Card
+                              key={ repo.id }
+                              repo={ repo } />
+                          )
+                        }
                       }
 
                       return (
@@ -136,4 +142,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default Home

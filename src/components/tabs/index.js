@@ -24,7 +24,7 @@ class Tabs extends Component {
   }
 
   onClick = (index, event) => {
-    event.preventDefault();
+    event.preventDefault()
     this.setState({ selected: index })
   }
 

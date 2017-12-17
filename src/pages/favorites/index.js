@@ -34,7 +34,7 @@ class Favorites extends Component {
   }
 
   componentWillMount() {
-    this.loadFavoriteRepositories();
+    this.loadFavoriteRepositories()
   }
 
   render() {
@@ -58,4 +58,4 @@ class Favorites extends Component {
   }
 }
 
-export default Favorites;
+export default Favorites

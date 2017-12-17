@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
+import Simplert from 'react-simplert'
 import update from 'immutability-helper'
 
 // api services
@@ -19,7 +20,8 @@ class Home extends Component {
     ],
     ruby_repositories: [],
     javascript_repositories: [],
-    favorite_ids: []
+    favorite_ids: [],
+    showAlert: false
   }
 
   // update the state:
@@ -78,8 +80,12 @@ class Home extends Component {
         localStorage.setItem('favorites', JSON.stringify(favorites))
         this.setState({ favorite_ids: favorites })
 
-        alert('Repositório adicionado aos favoritos.')
+        this.setState({ showAlert: true })
       })
+  }
+
+  removeAlert = () => {
+    this.setState({ showAlert: false })
   }
 
   componentWillMount() {
@@ -97,6 +103,15 @@ class Home extends Component {
         <div className="container content">
           <h1>Listagem</h1>
         </div>
+
+        <Simplert
+          showSimplert={ this.state.showAlert }
+          type="success"
+          title="Favoritado"
+          message="Repositório adicionado aos favoritos."
+          customCloseBtnText="Fechar"
+          onClose={ this.removeAlert.bind(this) }
+        />
 
         <Tabs selected={ 0 }>
           {

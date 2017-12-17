@@ -7,7 +7,7 @@ import firebase from '../../api/firebase'
 import Card from '../../components/card'
 
 class Favorites extends Component {
-  state = { favorite_repositories: {} }
+  state = { favorite_ids: [], favorite_repositories: {} }
 
   // load the repositories (FIREBASE) and caches the results
   loadFavoriteRepositories = () => {
@@ -34,7 +34,14 @@ class Favorites extends Component {
   }
 
   componentWillMount() {
-    this.loadFavoriteRepositories()
+    const favorites = localStorage.getItem('favorites')
+
+    if (favorites) {
+      this.setState({ favorite_ids: JSON.parse(favorites) })
+      this.loadFavoriteRepositories()
+
+      return
+    }
   }
 
   render() {
@@ -45,7 +52,7 @@ class Favorites extends Component {
         </div>
 
         {
-          (this.state.favorite_repositories) ?
+          (Object.keys(this.state.favorite_repositories).length) ?
             Object.keys(this.state.favorite_repositories).map((key, index) => {
               const repo = { ...this.state.favorite_repositories[key] }
 

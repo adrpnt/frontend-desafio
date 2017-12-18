@@ -18,7 +18,7 @@ Para a parte de layout da aplicação foi utilizado o CSS framework baseado no F
 - [React Infinite Scroller][react-infinite-scroller-url]
 - [React Simplert][react-simplert-url]
 
-O [Firebase][firebase-url] é utilizado para hospedar a aplicação ([link][project-url]), quanto para armazenar os repositórios favoritados em seu banco real time.
+O [Firebase][firebase-url] é utilizado tanto para hospedar a aplicação ([link][project-url]), quanto para armazenar os repositórios favoritados em seu banco real time.
 
 [pwa-introduction]: https://developers.google.com/web/fundamentals/getting-started/codelabs/your-first-pwapp/
 [github-api-url]: https://developer.github.com/v3/

@@ -10,7 +10,7 @@ O projeto é um [PWA][pwa-introduction], aonde será possível visualizar os pri
 
 ## Visão Geral
 
-A aplicação é uma PWA desenvolvida utilizando o framework [React.js][reactjs-url], onde as requisições externas também são armazenadas no cache, ou seja, a lista de repositórios e os repositórios favoritados são armazenados em cache, caso não exista dados no cache, a API/Firebase são consultados.
+A aplicação é uma PWA desenvolvida utilizando o framework [React.js][reactjs-url], onde as requisições externas também são armazenadas no cache, ou seja, a lista de repositórios e os repositórios favoritados são armazenados em cache, caso não exista dados no cache, a [API do GitHub][github-api-url]/[Firebase][firebase-url] são consultados.
 
 É possível navegar entre duas rotas: HOME e FAVORITOS.
 

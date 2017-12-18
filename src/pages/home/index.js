@@ -21,7 +21,8 @@ class Home extends Component {
     ruby_repositories: [],
     javascript_repositories: [],
     favorite_ids: [],
-    showAlert: false
+    showAlert: false,
+    showErrorAlert: false,
   }
 
   // update the state:
@@ -68,6 +69,11 @@ class Home extends Component {
   addToFavorites = (repo, event) => {
     event.preventDefault()
 
+    if(!navigator.onLine) {
+      this.setState({ showErrorAlert: true })
+      return
+    }
+
     firebase.post('favorites.json', repo)
       .then(response => {
         if('caches' in window) {
@@ -85,7 +91,7 @@ class Home extends Component {
   }
 
   removeAlert = () => {
-    this.setState({ showAlert: false })
+    this.setState({ showAlert: false, showErrorAlert: false })
   }
 
   componentWillMount() {
@@ -107,8 +113,17 @@ class Home extends Component {
         <Simplert
           showSimplert={ this.state.showAlert }
           type="success"
-          title="Favoritado"
+          title="FAVORITADO"
           message="Repositório adicionado aos favoritos."
+          customCloseBtnText="Fechar"
+          onClose={ this.removeAlert.bind(this) }
+        />
+
+        <Simplert
+          showSimplert={ this.state.showErrorAlert }
+          type="error"
+          title="SEM CONEXÃO"
+          message="Verifique a sua conexão com a internet antes de favoritar."
           customCloseBtnText="Fechar"
           onClose={ this.removeAlert.bind(this) }
         />
